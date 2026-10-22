@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
 let memoryServerInstance = null;
 
@@ -9,6 +8,7 @@ export const connectDB = async () => {
 
     if (!mongoUri || mongoUri === 'memory') {
       console.log('⚡ Initializing in-memory MongoDB server for local development/testing...');
+      const { MongoMemoryServer } = await import('mongodb-memory-server');
       memoryServerInstance = await MongoMemoryServer.create();
       mongoUri = memoryServerInstance.getUri();
       console.log(`📦 In-memory MongoDB running at: ${mongoUri}`);
@@ -26,6 +26,7 @@ export const connectDB = async () => {
     if (process.env.NODE_ENV === 'development' && !memoryServerInstance) {
       try {
         console.log('⚠️ Attempting fallback to in-memory MongoDB...');
+        const { MongoMemoryServer } = await import('mongodb-memory-server');
         memoryServerInstance = await MongoMemoryServer.create();
         const fallbackUri = memoryServerInstance.getUri();
         const conn = await mongoose.connect(fallbackUri);

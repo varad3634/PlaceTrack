@@ -60,8 +60,18 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Health Check
-app.get('/api/v1/health', (req, res) => {
+// Health Checks & Root Route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    service: 'PlaceTrack Backend API',
+    version: '1.0.0',
+    documentation: '/api/v1/health',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get(['/health', '/api/v1/health'], (req, res) => {
   res.status(200).json({
     status: 'success',
     service: 'PlaceTrack Backend API',
